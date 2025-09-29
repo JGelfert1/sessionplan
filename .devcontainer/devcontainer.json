@@ -3,11 +3,11 @@
 {
 	"name": "Node.js",
 	// Or use a Dockerfile or Docker Compose file. More info: https://containers.dev/guide/dockerfile
-	"image": "mcr.microsoft.com/devcontainers/javascript-node:1-22-bookworm"
+	"image": "mcr.microsoft.com/devcontainers/javascript-node:1-22-bookworm",
 
 	// Features to add to the dev container. More info: https://containers.dev/features.
 	"features": {
-		"gghcr.io/devcontainers/features/git-lfs":"1",
+		"gghcr.io/devcontainers/features/git-lfs":"1"
 	},
 
 	// Use 'forwardPorts' to make a list of ports inside the container available locally.
