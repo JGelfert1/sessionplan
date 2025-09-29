@@ -1,0 +1,13 @@
+{
+  "name": "sessionplan",
+  "version": "1.0.0",
+  "description": "sessionplan ist dafür da, Sessionpläne für Barcamps digital zu verwalten  und auf beliebigen Devices anzuzeigen.",
+  "main": "index.js",
+  "scripts": {},
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@playwright/test": "^1.55.1",
+    "@types/node": "^24.5.2"
+  }
+}
