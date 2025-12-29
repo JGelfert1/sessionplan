@@ -1,13 +1,301 @@
 <!doctype html>
-<html lang="en">
+<html lang="de">
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Sessionplan</title>
+    <title>Barcamp — Beispiel-Sessionplan</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+    <style>
+      /* Layout */
+      body{padding:1.5rem;background:#f8f9fa}
+      header{margin-bottom:1rem}
+      .session-card{border-left:4px solid var(--bs-primary)}
+      .session-card .card-body{padding:.6rem}
+      .session-time{font-weight:700;width:110px}
+      .tag{font-size:.75rem}
+      /* Desktop: table view, Mobile: stacked cards */
+      .matrix-view{display:none}
+      .stacked-view{display:block}
+      @media (min-width: 768px){
+        .matrix-view{display:block}
+        .stacked-view{display:none}
+      }
+      /* Table cells: keep consistent heights for cards */
+      .matrix-table td{vertical-align:top;padding:.6rem}
+      .matrix-table .card{min-height:4.5rem}
+      /* Small adjustments */
+      .room-badge{font-size:.7rem}
+    </style>
   </head>
   <body>
-    <h1>Sessionplan</h1>
+    <header class="container">
+      <div class="d-flex flex-column flex-md-row justify-content-between align-items-start gap-3">
+        <div>
+          <h1 class="h3 mb-1">Barcamp Ruhr — Beispiel-Sessionplan</h1>
+          <p class="text-muted mb-0">Samstag, 10. Januar • Ort: Kulturzentrum</p>
+        </div>
+        <div class="w-100 w-md-auto">
+          <div class="input-group">
+            <input id="search" type="search" class="form-control" placeholder="Suchen (Titel, Speaker, Tag)" aria-label="Suchen" oninput="filterSessions()">
+            <button class="btn btn-outline-secondary" type="button" onclick="clearSearch()">Zurücksetzen</button>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <main class="container">
+      <section class="mt-3">
+        <h2 class="h5">Legend</h2>
+        <p class="small text-muted">Ansicht wechselt automatisch: Tabelle für Desktop/Tablet, gestapelte Karten für Smartphones.</p>
+      </section>
+
+      <!-- MATRIX VIEW (Desktop / Tablet) -->
+      <section class="matrix-view mt-3">
+        <div class="table-responsive">
+          <table class="table table-bordered matrix-table">
+            <thead class="table-light">
+              <tr>
+                <th scope="col">Zeit</th>
+                <th scope="col">Raum A</th>
+                <th scope="col">Raum B</th>
+                <th scope="col">Raum C</th>
+              </tr>
+            </thead>
+            <tbody id="matrixBody">
+              <tr data-time="09:00 - 09:45">
+                <td class="session-time align-middle">09:00 — 09:45</td>
+                <td>
+                  <article class="card session-card" data-title="Begrüßung & Einführung" data-speaker="Organisationsteam" data-tags="opening">
+                    <div class="card-body">
+                      <div class="d-flex justify-content-between">
+                        <div><strong>Begrüßung & Einführung</strong><div class="text-muted small">Organisationsteam</div></div>
+                        <span class="badge bg-primary room-badge">Keynote</span>
+                      </div>
+                    </div>
+                  </article>
+                </td>
+                <td></td>
+                <td></td>
+              </tr>
+
+              <tr data-time="10:15 - 11:00">
+                <td class="session-time align-middle">10:15 — 11:00</td>
+                <td>
+                  <article class="card session-card" data-title="Agile Games" data-speaker="Anna Müller" data-tags="agile,games">
+                    <div class="card-body">
+                      <strong>Agile Games</strong>
+                      <div class="text-muted small">Anna Müller</div>
+                    </div>
+                  </article>
+                </td>
+                <td>
+                  <article class="card session-card" data-title="Remote Barcamp Tipps" data-speaker="Max Mustermann" data-tags="remote,tips">
+                    <div class="card-body">
+                      <strong>Remote Barcamp Tipps</strong>
+                      <div class="text-muted small">Max Mustermann</div>
+                    </div>
+                  </article>
+                </td>
+                <td>
+                  <article class="card session-card" data-title="Design Thinking Crash" data-speaker="Laura Becker" data-tags="design,workshop">
+                    <div class="card-body">
+                      <strong>Design Thinking Crash</strong>
+                      <div class="text-muted small">Laura Becker</div>
+                    </div>
+                  </article>
+                </td>
+              </tr>
+
+              <tr data-time="11:15 - 12:00">
+                <td class="session-time align-middle">11:15 — 12:00</td>
+                <td>
+                  <article class="card session-card" data-title="Open Space Tools" data-speaker="Thomas Richter" data-tags="tools,open-space">
+                    <div class="card-body">
+                      <strong>Open Space Tools</strong>
+                      <div class="text-muted small">Thomas Richter</div>
+                    </div>
+                  </article>
+                </td>
+                <td>
+                  <article class="card session-card" data-title="Community Building" data-speaker="Sofia Klein" data-tags="community">
+                    <div class="card-body">
+                      <strong>Community Building</strong>
+                      <div class="text-muted small">Sofia Klein</div>
+                    </div>
+                  </article>
+                </td>
+                <td>
+                  <article class="card session-card" data-title="Pitch-Session" data-speaker="Diverse" data-tags="pitch">
+                    <div class="card-body">
+                      <strong>Pitch-Session</strong>
+                      <div class="text-muted small">Diverse</div>
+                    </div>
+                  </article>
+                </td>
+              </tr>
+
+              <tr data-time="13:00 - 14:00">
+                <td class="session-time align-middle">13:00 — 14:00</td>
+                <td colspan="3">
+                  <article class="card session-card" data-title="Lunch & Networking" data-speaker="—" data-tags="lunch">
+                    <div class="card-body">
+                      <strong>Lunch & Networking</strong>
+                      <div class="text-muted small">Gemeinsame Pause</div>
+                    </div>
+                  </article>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- STACKED VIEW (Smartphones) -->
+      <section class="stacked-view mt-3">
+        <div id="stackedList" class="row g-3">
+          <!-- Cards will be present statically to match the matrix view -->
+          <div class="col-12">
+            <div class="h6 mb-2">09:00 — 09:45</div>
+            <div class="card session-card mb-2" data-title="Begrüßung & Einführung" data-speaker="Organisationsteam" data-tags="opening">
+              <div class="card-body">
+                <div class="d-flex justify-content-between">
+                  <div>
+                    <strong>Begrüßung & Einführung</strong>
+                    <div class="text-muted small">Organisationsteam</div>
+                  </div>
+                  <span class="badge bg-primary room-badge">Keynote</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-12">
+            <div class="h6 mb-2">10:15 — 11:00</div>
+            <div class="card session-card mb-2" data-title="Agile Games" data-speaker="Anna Müller" data-tags="agile,games">
+              <div class="card-body">
+                <div class="d-flex justify-content-between">
+                  <div>
+                    <strong>Agile Games</strong>
+                    <div class="text-muted small">Anna Müller — Raum A</div>
+                  </div>
+                  <span class="badge bg-secondary room-badge">Raum A</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="card session-card mb-2" data-title="Remote Barcamp Tipps" data-speaker="Max Mustermann" data-tags="remote,tips">
+              <div class="card-body">
+                <div class="d-flex justify-content-between">
+                  <div>
+                    <strong>Remote Barcamp Tipps</strong>
+                    <div class="text-muted small">Max Mustermann — Raum B</div>
+                  </div>
+                  <span class="badge bg-secondary room-badge">Raum B</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="card session-card mb-2" data-title="Design Thinking Crash" data-speaker="Laura Becker" data-tags="design,workshop">
+              <div class="card-body">
+                <div class="d-flex justify-content-between">
+                  <div>
+                    <strong>Design Thinking Crash</strong>
+                    <div class="text-muted small">Laura Becker — Raum C</div>
+                  </div>
+                  <span class="badge bg-secondary room-badge">Raum C</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-12">
+            <div class="h6 mb-2">11:15 — 12:00</div>
+            <div class="card session-card mb-2" data-title="Open Space Tools" data-speaker="Thomas Richter" data-tags="tools,open-space">
+              <div class="card-body">
+                <div class="d-flex justify-content-between">
+                  <div>
+                    <strong>Open Space Tools</strong>
+                    <div class="text-muted small">Thomas Richter — Raum A</div>
+                  </div>
+                  <span class="badge bg-secondary room-badge">Raum A</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="card session-card mb-2" data-title="Community Building" data-speaker="Sofia Klein" data-tags="community">
+              <div class="card-body">
+                <div class="d-flex justify-content-between">
+                  <div>
+                    <strong>Community Building</strong>
+                    <div class="text-muted small">Sofia Klein — Raum B</div>
+                  </div>
+                  <span class="badge bg-secondary room-badge">Raum B</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="card session-card mb-2" data-title="Pitch-Session" data-speaker="Diverse" data-tags="pitch">
+              <div class="card-body">
+                <div class="d-flex justify-content-between">
+                  <div>
+                    <strong>Pitch-Session</strong>
+                    <div class="text-muted small">Diverse — Raum C</div>
+                  </div>
+                  <span class="badge bg-secondary room-badge">Raum C</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-12">
+            <div class="h6 mb-2">13:00 — 14:00</div>
+            <div class="card session-card mb-2" data-title="Lunch & Networking" data-speaker="—" data-tags="lunch">
+              <div class="card-body d-flex justify-content-between align-items-center">
+                <div>
+                  <strong>Lunch & Networking</strong>
+                  <div class="text-muted small">Gemeinsame Pause</div>
+                </div>
+                <span class="badge bg-success room-badge">Pause</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+    </main>
+
+    <footer class="container mt-4 mb-4 text-muted small">© Barcamp Beispiel — Diese Seite zeigt nur einen Beispiel-Sessionplan.</footer>
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
+    <script>
+      // Simple search/filter across session cards
+      function filterSessions(){
+        const q = document.getElementById('search').value.trim().toLowerCase();
+        const cards = document.querySelectorAll('.session-card');
+        if(!q){
+          cards.forEach(c=>c.style.display='');
+          // also show all rows in matrix
+          document.querySelectorAll('#matrixBody tr').forEach(r=>r.style.display='');
+          return;
+        }
+        cards.forEach(c=>{
+          const title = (c.getAttribute('data-title')||'').toLowerCase();
+          const speaker = (c.getAttribute('data-speaker')||'').toLowerCase();
+          const tags = (c.getAttribute('data-tags')||'').toLowerCase();
+          const match = title.includes(q) || speaker.includes(q) || tags.includes(q);
+          c.style.display = match ? '' : 'none';
+        });
+        // For matrix: hide whole row if all its cells are empty/hidden
+        document.querySelectorAll('#matrixBody tr').forEach(row=>{
+          const cells = Array.from(row.querySelectorAll('td'));
+          const visibleCard = cells.some(td=> td.querySelector('.session-card') && td.querySelector('.session-card').style.display !== 'none');
+          row.style.display = visibleCard ? '' : 'none';
+        });
+      }
+      function clearSearch(){
+        document.getElementById('search').value='';
+        filterSessions();
+      }
+    </script>
   </body>
 </html>
