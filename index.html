@@ -34,7 +34,8 @@
           <h1 class="h3 mb-1">Barcamp Ruhr — Beispiel-Sessionplan</h1>
           <p class="text-muted mb-0">Samstag, 10. Januar • Ort: Kulturzentrum</p>
         </div>
-        <div class="w-100 w-md-auto">
+        <div class="w-100 w-md-auto d-flex gap-2">
+          <select id="planSelect" class="form-select form-select-sm" aria-label="Sessionplan auswählen"></select>
           <div class="input-group">
             <input id="search" type="search" class="form-control" placeholder="Suchen (Titel, Speaker, Tag)" aria-label="Suchen" oninput="filterSessions()">
             <button class="btn btn-outline-secondary" type="button" onclick="clearSearch()">Zurücksetzen</button>
@@ -53,98 +54,11 @@
       <section class="matrix-view mt-3">
         <div class="table-responsive">
           <table class="table table-bordered matrix-table">
-            <thead class="table-light">
-              <tr>
-                <th scope="col">Zeit</th>
-                <th scope="col">Raum A</th>
-                <th scope="col">Raum B</th>
-                <th scope="col">Raum C</th>
-              </tr>
+            <thead class="table-light" id="matrixHeader">
+              <!-- dynamically populated -->
             </thead>
             <tbody id="matrixBody">
-              <tr data-time="09:00 - 09:45">
-                <td class="session-time align-middle">09:00 — 09:45</td>
-                <td>
-                  <article class="card session-card" data-title="Begrüßung & Einführung" data-speaker="Organisationsteam" data-tags="opening">
-                    <div class="card-body">
-                      <div class="d-flex justify-content-between">
-                        <div><strong>Begrüßung & Einführung</strong><div class="text-muted small">Organisationsteam</div></div>
-                        <span class="badge bg-primary room-badge">Keynote</span>
-                      </div>
-                    </div>
-                  </article>
-                </td>
-                <td></td>
-                <td></td>
-              </tr>
-
-              <tr data-time="10:15 - 11:00">
-                <td class="session-time align-middle">10:15 — 11:00</td>
-                <td>
-                  <article class="card session-card" data-title="Agile Games" data-speaker="Anna Müller" data-tags="agile,games">
-                    <div class="card-body">
-                      <strong>Agile Games</strong>
-                      <div class="text-muted small">Anna Müller</div>
-                    </div>
-                  </article>
-                </td>
-                <td>
-                  <article class="card session-card" data-title="Remote Barcamp Tipps" data-speaker="Max Mustermann" data-tags="remote,tips">
-                    <div class="card-body">
-                      <strong>Remote Barcamp Tipps</strong>
-                      <div class="text-muted small">Max Mustermann</div>
-                    </div>
-                  </article>
-                </td>
-                <td>
-                  <article class="card session-card" data-title="Design Thinking Crash" data-speaker="Laura Becker" data-tags="design,workshop">
-                    <div class="card-body">
-                      <strong>Design Thinking Crash</strong>
-                      <div class="text-muted small">Laura Becker</div>
-                    </div>
-                  </article>
-                </td>
-              </tr>
-
-              <tr data-time="11:15 - 12:00">
-                <td class="session-time align-middle">11:15 — 12:00</td>
-                <td>
-                  <article class="card session-card" data-title="Open Space Tools" data-speaker="Thomas Richter" data-tags="tools,open-space">
-                    <div class="card-body">
-                      <strong>Open Space Tools</strong>
-                      <div class="text-muted small">Thomas Richter</div>
-                    </div>
-                  </article>
-                </td>
-                <td>
-                  <article class="card session-card" data-title="Community Building" data-speaker="Sofia Klein" data-tags="community">
-                    <div class="card-body">
-                      <strong>Community Building</strong>
-                      <div class="text-muted small">Sofia Klein</div>
-                    </div>
-                  </article>
-                </td>
-                <td>
-                  <article class="card session-card" data-title="Pitch-Session" data-speaker="Diverse" data-tags="pitch">
-                    <div class="card-body">
-                      <strong>Pitch-Session</strong>
-                      <div class="text-muted small">Diverse</div>
-                    </div>
-                  </article>
-                </td>
-              </tr>
-
-              <tr data-time="13:00 - 14:00">
-                <td class="session-time align-middle">13:00 — 14:00</td>
-                <td colspan="3">
-                  <article class="card session-card" data-title="Lunch & Networking" data-speaker="—" data-tags="lunch">
-                    <div class="card-body">
-                      <strong>Lunch & Networking</strong>
-                      <div class="text-muted small">Gemeinsame Pause</div>
-                    </div>
-                  </article>
-                </td>
-              </tr>
+              <!-- dynamically populated -->
             </tbody>
           </table>
         </div>
@@ -153,112 +67,7 @@
       <!-- STACKED VIEW (Smartphones) -->
       <section class="stacked-view mt-3">
         <div id="stackedList" class="row g-3">
-          <!-- Cards will be present statically to match the matrix view -->
-          <div class="col-12">
-            <div class="h6 mb-2">09:00 — 09:45</div>
-            <div class="card session-card mb-2" data-title="Begrüßung & Einführung" data-speaker="Organisationsteam" data-tags="opening">
-              <div class="card-body">
-                <div class="d-flex justify-content-between">
-                  <div>
-                    <strong>Begrüßung & Einführung</strong>
-                    <div class="text-muted small">Organisationsteam</div>
-                  </div>
-                  <span class="badge bg-primary room-badge">Keynote</span>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div class="col-12">
-            <div class="h6 mb-2">10:15 — 11:00</div>
-            <div class="card session-card mb-2" data-title="Agile Games" data-speaker="Anna Müller" data-tags="agile,games">
-              <div class="card-body">
-                <div class="d-flex justify-content-between">
-                  <div>
-                    <strong>Agile Games</strong>
-                    <div class="text-muted small">Anna Müller — Raum A</div>
-                  </div>
-                  <span class="badge bg-secondary room-badge">Raum A</span>
-                </div>
-              </div>
-            </div>
-
-            <div class="card session-card mb-2" data-title="Remote Barcamp Tipps" data-speaker="Max Mustermann" data-tags="remote,tips">
-              <div class="card-body">
-                <div class="d-flex justify-content-between">
-                  <div>
-                    <strong>Remote Barcamp Tipps</strong>
-                    <div class="text-muted small">Max Mustermann — Raum B</div>
-                  </div>
-                  <span class="badge bg-secondary room-badge">Raum B</span>
-                </div>
-              </div>
-            </div>
-
-            <div class="card session-card mb-2" data-title="Design Thinking Crash" data-speaker="Laura Becker" data-tags="design,workshop">
-              <div class="card-body">
-                <div class="d-flex justify-content-between">
-                  <div>
-                    <strong>Design Thinking Crash</strong>
-                    <div class="text-muted small">Laura Becker — Raum C</div>
-                  </div>
-                  <span class="badge bg-secondary room-badge">Raum C</span>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div class="col-12">
-            <div class="h6 mb-2">11:15 — 12:00</div>
-            <div class="card session-card mb-2" data-title="Open Space Tools" data-speaker="Thomas Richter" data-tags="tools,open-space">
-              <div class="card-body">
-                <div class="d-flex justify-content-between">
-                  <div>
-                    <strong>Open Space Tools</strong>
-                    <div class="text-muted small">Thomas Richter — Raum A</div>
-                  </div>
-                  <span class="badge bg-secondary room-badge">Raum A</span>
-                </div>
-              </div>
-            </div>
-
-            <div class="card session-card mb-2" data-title="Community Building" data-speaker="Sofia Klein" data-tags="community">
-              <div class="card-body">
-                <div class="d-flex justify-content-between">
-                  <div>
-                    <strong>Community Building</strong>
-                    <div class="text-muted small">Sofia Klein — Raum B</div>
-                  </div>
-                  <span class="badge bg-secondary room-badge">Raum B</span>
-                </div>
-              </div>
-            </div>
-
-            <div class="card session-card mb-2" data-title="Pitch-Session" data-speaker="Diverse" data-tags="pitch">
-              <div class="card-body">
-                <div class="d-flex justify-content-between">
-                  <div>
-                    <strong>Pitch-Session</strong>
-                    <div class="text-muted small">Diverse — Raum C</div>
-                  </div>
-                  <span class="badge bg-secondary room-badge">Raum C</span>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div class="col-12">
-            <div class="h6 mb-2">13:00 — 14:00</div>
-            <div class="card session-card mb-2" data-title="Lunch & Networking" data-speaker="—" data-tags="lunch">
-              <div class="card-body d-flex justify-content-between align-items-center">
-                <div>
-                  <strong>Lunch & Networking</strong>
-                  <div class="text-muted small">Gemeinsame Pause</div>
-                </div>
-                <span class="badge bg-success room-badge">Pause</span>
-              </div>
-            </div>
-          </div>
+          <!-- dynamically populated -->
         </div>
       </section>
 
@@ -268,6 +77,142 @@
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
     <script>
+      // Plans available in data/template — keep in sync with files created
+      const PLANS = [
+        {name: 'Barcamp Beispiel A', file: 'data/template/BASIC_BARCAMP.json'},
+        {name: 'Barcamp Beispiel B — Kompakt', file: 'data/template/TWO_ROOMS_BARCAMP.json'},
+        {name: 'Remote Barcamp — Online', file: 'data/template/REMOTE_BARCAMP.json'}
+      ];
+
+      // Populate plan select and load selected plan
+      document.addEventListener('DOMContentLoaded', ()=>{
+        const sel = document.getElementById('planSelect');
+        PLANS.forEach((p, i)=>{
+          const opt = document.createElement('option');
+          opt.value = p.file;
+          opt.textContent = p.name;
+          if(i===0) opt.selected = true;
+          sel.appendChild(opt);
+        });
+        sel.addEventListener('change', ()=> loadPlan(sel.value));
+        // load default
+        if(sel.value) loadPlan(sel.value);
+      });
+
+      async function loadPlan(url){
+        try{
+          const res = await fetch(url);
+          if(!res.ok) throw new Error('Fehler beim Laden: '+res.status);
+          const data = await res.json();
+          renderPlan(data);
+        }catch(e){
+          console.error(e);
+          alert('Fehler beim Laden des Plans. Konsole prüfen.');
+        }
+      }
+
+      function renderPlan(data){
+        // header
+        const titleEl = document.querySelector('header h1');
+        const metaEl = document.querySelector('header p');
+        if(data.meta){
+          titleEl.textContent = data.meta.title;
+          metaEl.textContent = (data.meta.date || '') + (data.meta.location ? ' • Ort: ' + data.meta.location : '');
+        }
+
+        const rooms = data.rooms || [];
+        const slots = data.slots || [];
+
+        // MATRIX HEADER
+        const header = document.getElementById('matrixHeader');
+        header.innerHTML = '';
+        const headRow = document.createElement('tr');
+        headRow.innerHTML = '<th scope="col">Zeit</th>' + rooms.map(r=>`<th scope="col">${escapeHtml(r)}</th>`).join('');
+        header.appendChild(headRow);
+
+        // MATRIX BODY
+        const body = document.getElementById('matrixBody');
+        body.innerHTML = '';
+        slots.forEach(slot=>{
+          const tr = document.createElement('tr');
+          tr.setAttribute('data-time', slot.time || '');
+          const timeTd = document.createElement('td');
+          timeTd.className = 'session-time align-middle';
+          timeTd.textContent = slot.time || '';
+          tr.appendChild(timeTd);
+
+          if(slot.full_span || (slot.cells && slot.cells.all)){
+            const td = document.createElement('td');
+            td.setAttribute('colspan', Math.max(rooms.length, 1));
+            const cell = (slot.cells && (slot.cells.all || slot.cells['all'])) || {};
+            td.innerHTML = buildCardHtml(cell.title || '', cell.speaker || '', (cell.tags||[]).join(','), cell.badge);
+            tr.appendChild(td);
+          }else{
+            rooms.forEach(r=>{
+              const td = document.createElement('td');
+              const cell = (slot.cells && slot.cells[r]);
+              if(cell){
+                td.innerHTML = buildCardHtml(cell.title || '', cell.speaker || '', (cell.tags||[]).join(','));
+              }
+              tr.appendChild(td);
+            });
+          }
+
+          body.appendChild(tr);
+        });
+
+        // STACKED VIEW
+        const stacked = document.getElementById('stackedList');
+        stacked.innerHTML = '';
+        slots.forEach(slot=>{
+          const col = document.createElement('div');
+          col.className = 'col-12';
+          const heading = document.createElement('div');
+          heading.className = 'h6 mb-2';
+          heading.textContent = slot.time || '';
+          col.appendChild(heading);
+
+          if(slot.full_span || (slot.cells && slot.cells.all)){
+            const cell = (slot.cells && (slot.cells.all || slot.cells['all'])) || {};
+            const card = document.createElement('div');
+            card.className = 'card session-card mb-2';
+            card.setAttribute('data-title', cell.title || '');
+            card.setAttribute('data-speaker', cell.speaker || '');
+            card.setAttribute('data-tags', (cell.tags||[]).join(','));
+            card.innerHTML = `<div class="card-body d-flex justify-content-between align-items-center">`+
+                             `<div><strong>${escapeHtml(cell.title||'')}</strong><div class="text-muted small">${escapeHtml(cell.speaker||'')}</div></div>`+
+                             `${cell.badge?`<span class="badge bg-success room-badge">${escapeHtml(cell.badge)}</span>`:''}`+
+                             `</div>`;
+            col.appendChild(card);
+          }else{
+            rooms.forEach(r=>{
+              const cell = slot.cells && slot.cells[r];
+              if(cell){
+                const card = document.createElement('div');
+                card.className = 'card session-card mb-2';
+                card.setAttribute('data-title', cell.title || '');
+                card.setAttribute('data-speaker', cell.speaker || '');
+                card.setAttribute('data-tags', (cell.tags||[]).join(','));
+                card.innerHTML = `<div class="card-body d-flex justify-content-between">`+
+                                 `<div><strong>${escapeHtml(cell.title||'')}</strong><div class="text-muted small">${escapeHtml(cell.speaker||'')} — ${escapeHtml(r)}</div></div>`+
+                                 `<span class="badge bg-secondary room-badge">${escapeHtml(r)}</span>`+
+                                 `</div>`;
+                col.appendChild(card);
+              }
+            });
+          }
+
+          stacked.appendChild(col);
+        });
+
+        // ensure search filtering applies to newly created elements
+        filterSessions();
+      }
+
+      function buildCardHtml(title, speaker, tags, badge){
+        return `<article class="card session-card" data-title="${escapeHtml(title)}" data-speaker="${escapeHtml(speaker)}" data-tags="${escapeHtml(tags)}"><div class="card-body"><div class="d-flex justify-content-between"><div><strong>${escapeHtml(title)}</strong><div class="text-muted small">${escapeHtml(speaker)}</div></div>${badge?`<span class="badge bg-primary room-badge">${escapeHtml(badge)}</span>`:''}</div></div></article>`;
+      }
+
       // Simple search/filter across session cards
       function filterSessions(){
         const q = document.getElementById('search').value.trim().toLowerCase();
@@ -295,6 +240,17 @@
       function clearSearch(){
         document.getElementById('search').value='';
         filterSessions();
+      }
+
+      // small helper to avoid injection
+      function escapeHtml(s){
+        return String(s||'').replace(/[&"'<>]/g, c => ({
+          '&': '&amp;',
+          '"': '&quot;',
+          "'": '&#39;',
+          '<': '&lt;',
+          '>': '&gt;'
+        }[c]));
       }
     </script>
   </body>

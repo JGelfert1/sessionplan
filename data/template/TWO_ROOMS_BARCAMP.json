@@ -1,0 +1,13 @@
+{
+  "meta":{
+    "title":"Barcamp Beispiel B — Kompakt",
+    "date":"Samstag, 17. Januar",
+    "location":"Coworking Space"
+  },
+  "rooms":["Raum A","Raum B"],
+  "slots":[
+    {"time":"09:30 - 10:15","cells":{"Raum A":{"title":"Lightning Talks","speaker":"Verschiedene","tags":["talks"]},"Raum B":{"title":"Workshop: Moderation","speaker":"Julia Weiss","tags":["workshop","moderation"]}}},
+    {"time":"10:45 - 11:30","cells":{"Raum A":{"title":"Design Sprints","speaker":"Jonas Berg","tags":["design"]},"Raum B":{"title":"Netzwerken & Ideen","speaker":"Community","tags":["netzwerk"]}}},
+    {"time":"12:00 - 13:00","full_span":true,"cells":{"all":{"title":"Mittagspause","speaker":"—","tags":["lunch"]}}}
+  ]
+}

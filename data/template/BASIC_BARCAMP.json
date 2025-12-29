@@ -1,0 +1,39 @@
+{
+  "meta": {
+    "title": "Barcamp Beispiel A",
+    "date": "Samstag, 10. Januar",
+    "location": "Kulturzentrum"
+  },
+  "rooms": ["Raum A", "Raum B", "Raum C"],
+  "slots": [
+    {
+      "time": "09:00 - 09:45",
+      "cells": {
+        "Raum A": {"title":"Begrüßung & Einführung","speaker":"Organisationsteam","tags":["opening"],"badge":"Keynote"}
+      }
+    },
+    {
+      "time": "10:15 - 11:00",
+      "cells": {
+        "Raum A": {"title":"Agile Games","speaker":"Anna Müller","tags":["agile","games"]},
+        "Raum B": {"title":"Remote Barcamp Tipps","speaker":"Max Mustermann","tags":["remote","tips"]},
+        "Raum C": {"title":"Design Thinking Crash","speaker":"Laura Becker","tags":["design","workshop"]}
+      }
+    },
+    {
+      "time": "11:15 - 12:00",
+      "cells": {
+        "Raum A": {"title":"Open Space Tools","speaker":"Thomas Richter","tags":["tools","open-space"]},
+        "Raum B": {"title":"Community Building","speaker":"Sofia Klein","tags":["community"]},
+        "Raum C": {"title":"Pitch-Session","speaker":"Diverse","tags":["pitch"]}
+      }
+    },
+    {
+      "time": "13:00 - 14:00",
+      "full_span": true,
+      "cells": {
+        "all": {"title":"Lunch & Networking","speaker":"—","tags":["lunch"],"badge":"Pause"}
+      }
+    }
+  ]
+}

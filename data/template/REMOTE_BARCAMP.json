@@ -1,0 +1,13 @@
+{
+  "meta":{
+    "title":"Remote Barcamp — Online",
+    "date":"Sonntag, 18. Januar (online)",
+    "location":"Zoom / Jitsi"
+  },
+  "rooms":["Session 1","Session 2","Session 3"],
+  "slots":[
+    {"time":"09:00 - 09:45","cells":{"Session 1":{"title":"Onboarding & Technik","speaker":"Support","tags":["online","tech"]}}},
+    {"time":"10:00 - 10:45","cells":{"Session 1":{"title":"Remote Facilitation","speaker":"Klaus Neumann","tags":["remote","facilitation"]},"Session 2":{"title":"Virtuelle Tools","speaker":"Miriam Frank","tags":["tools"]}}},
+    {"time":"11:00 - 11:45","cells":{"Session 3":{"title":"Q&A und Austausch","speaker":"Alle","tags":["qna","community"]}}}
+  ]
+}
