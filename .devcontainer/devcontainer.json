@@ -21,7 +21,7 @@
 		"vscode": {
 			"extensions": [
 				"ms-playwright.playwright",
-				"jamesqquick.web-development-essentials-extension-pack"
+				"ricardo-emerson.web-development-extensions-pack"
 			]
 		}
 	}
