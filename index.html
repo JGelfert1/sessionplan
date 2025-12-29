@@ -25,6 +25,10 @@
       .matrix-table .card{min-height:4.5rem}
       /* Small adjustments */
       .room-badge{font-size:.7rem}
+      /* Favorites */
+      .fav-btn{background:transparent;border:0;font-size:1.1rem;line-height:1;color:#e4e5e9;cursor:pointer;padding:0 .25rem}
+      .fav-btn[aria-pressed="true"]{color:#ffc107}
+      .session-card.favorited{box-shadow:0 0 0 0.2rem rgba(255,193,7,0.12)}
     </style>
   </head>
   <body>
@@ -36,6 +40,7 @@
         </div>
         <div class="w-100 w-md-auto d-flex gap-2">
           <select id="planSelect" class="form-select form-select-sm" aria-label="Sessionplan auswählen"></select>
+          <button id="favToggle" class="btn btn-outline-warning btn-sm" type="button" title="Nur Favoriten anzeigen">Favoriten</button>
           <div class="input-group">
             <input id="search" type="search" class="form-control" placeholder="Suchen (Titel, Speaker, Tag)" aria-label="Suchen" oninput="filterSessions()">
             <button class="btn btn-outline-secondary" type="button" onclick="clearSearch()">Zurücksetzen</button>
@@ -94,13 +99,36 @@
           if(i===0) opt.selected = true;
           sel.appendChild(opt);
         });
+
+        // favorites toggle
+        const favToggle = document.getElementById('favToggle');
+        let showOnlyFavs = false;
+        favToggle.addEventListener('click', ()=>{
+          showOnlyFavs = !showOnlyFavs;
+          favToggle.classList.toggle('active', showOnlyFavs);
+          favToggle.setAttribute('aria-pressed', String(showOnlyFavs));
+          applyFavoritesFilter(showOnlyFavs);
+        });
+
         sel.addEventListener('change', ()=> loadPlan(sel.value));
+
+        // global click handler for favorite buttons (delegation)
+        document.body.addEventListener('click', (e)=>{
+          const btn = e.target.closest && e.target.closest('.fav-btn');
+          if(!btn) return;
+          const sessionId = btn.getAttribute('data-session-id');
+          const plan = document.getElementById('planSelect').value;
+          toggleFavorite(plan, sessionId);
+        });
+
         // load default
         if(sel.value) loadPlan(sel.value);
       });
 
       async function loadPlan(url){
         try{
+          // remember current plan (used for favorites keys)
+          window.currentPlanFile = url;
           const res = await fetch(url);
           if(!res.ok) throw new Error('Fehler beim Laden: '+res.status);
           const data = await res.json();
@@ -145,14 +173,16 @@
             const td = document.createElement('td');
             td.setAttribute('colspan', Math.max(rooms.length, 1));
             const cell = (slot.cells && (slot.cells.all || slot.cells['all'])) || {};
-            td.innerHTML = buildCardHtml(cell.title || '', cell.speaker || '', (cell.tags||[]).join(','), cell.badge);
+            const sid = makeSessionId(currentPlanFile, slot.time||'', 'all', cell.title||'');
+            td.innerHTML = buildCardHtml(cell.title || '', cell.speaker || '', (cell.tags||[]).join(','), cell.badge, sid);
             tr.appendChild(td);
           }else{
             rooms.forEach(r=>{
               const td = document.createElement('td');
               const cell = (slot.cells && slot.cells[r]);
               if(cell){
-                td.innerHTML = buildCardHtml(cell.title || '', cell.speaker || '', (cell.tags||[]).join(','));
+                const sid = makeSessionId(currentPlanFile, slot.time||'', r, cell.title||'');
+                td.innerHTML = buildCardHtml(cell.title || '', cell.speaker || '', (cell.tags||[]).join(','), null, sid);
               }
               tr.appendChild(td);
             });
@@ -174,28 +204,34 @@
 
           if(slot.full_span || (slot.cells && slot.cells.all)){
             const cell = (slot.cells && (slot.cells.all || slot.cells['all'])) || {};
+            const sid = makeSessionId(currentPlanFile, slot.time||'', 'all', cell.title||'');
             const card = document.createElement('div');
             card.className = 'card session-card mb-2';
+            card.setAttribute('data-session-id', sid);
             card.setAttribute('data-title', cell.title || '');
             card.setAttribute('data-speaker', cell.speaker || '');
             card.setAttribute('data-tags', (cell.tags||[]).join(','));
             card.innerHTML = `<div class="card-body d-flex justify-content-between align-items-center">`+
                              `<div><strong>${escapeHtml(cell.title||'')}</strong><div class="text-muted small">${escapeHtml(cell.speaker||'')}</div></div>`+
                              `${cell.badge?`<span class="badge bg-success room-badge">${escapeHtml(cell.badge)}</span>`:''}`+
+                             `<button type="button" class="fav-btn" data-session-id="${escapeHtml(sid)}" aria-pressed="false">☆</button>`+
                              `</div>`;
             col.appendChild(card);
           }else{
             rooms.forEach(r=>{
               const cell = slot.cells && slot.cells[r];
               if(cell){
+                const sid = makeSessionId(currentPlanFile, slot.time||'', r, cell.title||'');
                 const card = document.createElement('div');
                 card.className = 'card session-card mb-2';
+                card.setAttribute('data-session-id', sid);
                 card.setAttribute('data-title', cell.title || '');
                 card.setAttribute('data-speaker', cell.speaker || '');
                 card.setAttribute('data-tags', (cell.tags||[]).join(','));
                 card.innerHTML = `<div class="card-body d-flex justify-content-between">`+
                                  `<div><strong>${escapeHtml(cell.title||'')}</strong><div class="text-muted small">${escapeHtml(cell.speaker||'')} — ${escapeHtml(r)}</div></div>`+
                                  `<span class="badge bg-secondary room-badge">${escapeHtml(r)}</span>`+
+                                 `<button type="button" class="fav-btn" data-session-id="${escapeHtml(sid)}" aria-pressed="false">☆</button>`+
                                  `</div>`;
                 col.appendChild(card);
               }
@@ -207,10 +243,17 @@
 
         // ensure search filtering applies to newly created elements
         filterSessions();
+        // sync favorites' UI for rendered cards
+        syncFavoritesForRendered();
+        // if favorites filter is active, reapply it
+        const favToggleEl = document.getElementById('favToggle');
+        if(favToggleEl && favToggleEl.classList.contains('active')) applyFavoritesFilter(true);
       }
 
-      function buildCardHtml(title, speaker, tags, badge){
-        return `<article class="card session-card" data-title="${escapeHtml(title)}" data-speaker="${escapeHtml(speaker)}" data-tags="${escapeHtml(tags)}"><div class="card-body"><div class="d-flex justify-content-between"><div><strong>${escapeHtml(title)}</strong><div class="text-muted small">${escapeHtml(speaker)}</div></div>${badge?`<span class="badge bg-primary room-badge">${escapeHtml(badge)}</span>`:''}</div></div></article>`;
+      function buildCardHtml(title, speaker, tags, badge, sessionId){
+        // sessionId is required to wire favorites
+        const sid = escapeHtml(sessionId||'');
+        return `<article class="card session-card" data-session-id="${sid}" data-title="${escapeHtml(title)}" data-speaker="${escapeHtml(speaker)}" data-tags="${escapeHtml(tags)}"><div class="card-body d-flex justify-content-between"><div><strong>${escapeHtml(title)}</strong><div class="text-muted small">${escapeHtml(speaker)}</div></div>${badge?`<span class="badge bg-primary room-badge">${escapeHtml(badge)}</span>`:''}<button type="button" class="fav-btn" data-session-id="${sid}" aria-pressed="false">☆</button></div></div></article>`;
       }
 
       // Simple search/filter across session cards
@@ -241,7 +284,86 @@
         document.getElementById('search').value='';
         filterSessions();
       }
-
+      // Favorites: WebStorage helpers
+      function makeSessionId(planFile, time, room, title){
+        // normalized id
+        return `${planFile}::${time}::${room}::${title}`;
+      }
+      function _storageKey(planFile){
+        return `sessionplan:favs:${planFile}`;
+      }
+      function getFavs(planFile){
+        try{
+          const raw = localStorage.getItem(_storageKey(planFile));
+          return raw ? JSON.parse(raw) : {};
+        }catch(e){
+          console.warn('LocalStorage read failed', e);
+          return {};
+        }
+      }
+      function saveFavs(planFile, obj){
+        try{
+          localStorage.setItem(_storageKey(planFile), JSON.stringify(obj));
+        }catch(e){
+          console.warn('LocalStorage write failed', e);
+        }
+      }
+      function isFav(planFile, sessionId){
+        const favs = getFavs(planFile);
+        return !!favs[sessionId];
+      }
+      function toggleFavorite(planFile, sessionId){
+        const favs = getFavs(planFile);
+        if(favs[sessionId]) delete favs[sessionId]; else favs[sessionId] = true;
+        saveFavs(planFile, favs);
+        updateFavoriteUI(planFile, sessionId);
+        // If favorites-filter active, reapply
+        const favToggle = document.getElementById('favToggle');
+        if(favToggle && favToggle.classList.contains('active')) applyFavoritesFilter(true);
+      }
+      function elementsBySessionId(sessionId){
+        return Array.from(document.querySelectorAll('[data-session-id]')).filter(n => n.getAttribute('data-session-id') === sessionId);
+      }
+      function updateFavoriteUI(planFile, sessionId){
+        const fav = isFav(planFile, sessionId);
+        elementsBySessionId(sessionId).forEach(el=>{
+          // card element
+          if(el.classList && el.classList.contains('session-card')){
+            if(fav) el.classList.add('favorited'); else el.classList.remove('favorited');
+          }
+          // button itself
+          if(el.classList && el.classList.contains('fav-btn')){
+            el.setAttribute('aria-pressed', fav ? 'true' : 'false');
+            el.textContent = fav ? '★' : '☆';
+          }
+          // nested button inside card
+          const btn = el.querySelector && el.querySelector('.fav-btn');
+          if(btn){ btn.setAttribute('aria-pressed', fav ? 'true' : 'false'); btn.textContent = fav ? '★' : '☆'; }
+        });
+      }
+      function applyFavoritesFilter(show){
+        show = !!show;
+        const plan = document.getElementById('planSelect').value;
+        document.querySelectorAll('.session-card').forEach(card=>{
+          const sid = card.getAttribute('data-session-id');
+          if(!sid) return;
+          const fav = isFav(plan, sid);
+          card.style.display = (!show || fav) ? '' : 'none';
+        });
+        // for matrix rows, hide if all cells hidden
+        document.querySelectorAll('#matrixBody tr').forEach(row=>{
+          const cells = Array.from(row.querySelectorAll('td'));
+          const anyVisible = cells.some(td=> td.querySelector('.session-card') && td.querySelector('.session-card').style.display !== 'none');
+          row.style.display = anyVisible ? '' : 'none';
+        });
+      }
+      function syncFavoritesForRendered(){
+        const plan = document.getElementById('planSelect').value;
+        document.querySelectorAll('[data-session-id]').forEach(el=>{
+          const sid = el.getAttribute('data-session-id');
+          updateFavoriteUI(plan, sid);
+        });
+      }
       // small helper to avoid injection
       function escapeHtml(s){
         return String(s||'').replace(/[&"'<>]/g, c => ({
